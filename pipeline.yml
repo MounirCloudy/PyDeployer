@@ -1,0 +1,42 @@
+# =========================================================
+# Configuration du PIPELINE.YML , pour le moment ready pour mode local seulement
+# Auteur  : MESSADI Mounir
+# Projet  : Py Deployer une outil pour l'automatisation d'un CI CD pipeline (Université Paris-Saclay – D’Évry)
+# Encadrement : Professeur Franck Pommereau
+# =========================================================
+
+project:
+  name: "PyDeployer"
+  author: "Mounir MESSADI"
+  version_file: "VERSION"
+  logs_dir: "logs"
+  archive_dir: "archive"
+
+# Mode d'exécution : local ou cloud (prévu pour Rendu 2)
+mode: "local"
+
+stages:
+  build:
+    description: "Prépare la version par l'incrementation du version actuel par 1 et vérifie l'état du dépôt"
+    command: "python3 pydeployer.py build"
+
+  test:
+    description: "Exécute pytest sur le répertoire tests et verifie si pour tel input on a l'output attendu"
+    command: "pytest -v"
+
+  deploy:
+    description: "Pousse les modifications sur GitHub et met à jour l’historique"
+    command: "git push origin master"
+    history_file: "archive/deploy_history.json"
+
+  rollback:
+    description: "Distaster Recovery en restaure la dernière version stable et archive la précédente"
+    command: "git reset --hard HEAD~1"
+
+# Configuration optionnelle (prévue pour Rendu 2) False pour le moment
+aws:
+  enabled: false
+  s3_bucket: "pydeployer-backups"
+  sns_topic: "pydeployer-alerts"
+  region: "eu-west-3"
+
