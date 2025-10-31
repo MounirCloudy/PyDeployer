@@ -15,11 +15,15 @@ project:
 # Mode d'exécution : local ou cloud (prévu pour Rendu 2)
 mode: "local"
 
-stages:
+stages: 
+  clone:
+    description: "Clone le dépôt GitHub s’il n’existe pas encore, sinon effectue un pull."
+    command: "git clone https://github.com/MounirCloudy/target-repo.git target_repo"
+
   build:
     description: "Prépare la version par l'incrementation du version actuel par 1 et vérifie l'état du dépôt"
     command: "python3 pydeployer.py build"
-
+  
   test:
     description: "Exécute pytest sur le répertoire tests et verifie si pour tel input on a l'output attendu"
     command: "pytest -v"
